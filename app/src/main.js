@@ -6,7 +6,11 @@ import Rx from 'rx';
   $(document).ready(init);
 
   function init() {
-    console.log('init');
+
+    testDropAndDrop();
+
+
+
 
     /*
     let subject = new Rx.Subject();
@@ -81,10 +85,42 @@ import Rx from 'rx';
       console.log('2 - :', evenTicks);
     });
     */
+  }
 
+  function testDropAndDrop() {
+    let $box = $('#box');
 
+    let mouseupEvents = Rx.Observable.fromEvent($box, 'mouseup'),
+      mousemoveEvents = Rx.Observable.fromEvent(document, 'mousemove'),
+      mousedownEvents = Rx.Observable.fromEvent($box, 'mousedown');
 
+    let source = mousedownEvents.flatMap(function(event) {
+      let pageX, pageY, left, top;
 
+      pageX = event.pageX;
+      pageY = event.pageY;
+      left = parseInt($box.css('left'), 10);
+      top = parseInt($box.css('top'), 10);
 
+      $box.addClass('hovering');
+
+      return mousemoveEvents.map(function(evt) {
+        return {
+          left: left + (evt.pageX - pageX),
+          top: top + (evt.pageY - pageY)
+        };
+      }).takeUntil(mouseupEvents); // https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/takeuntil.md
+    });
+
+    mouseupEvents.subscribe(function() {
+      $box.removeClass('hovering');
+    });
+
+    source.subscribe(function(pos) {
+      TweenLite.set($box, {
+        left: pos.left,
+        top: pos.top
+      });
+    });
   }
 }(jQuery));
