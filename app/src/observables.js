@@ -6,6 +6,56 @@ import Rx from 'rxjs/Rx';
   $(document).ready(init);
 
   function init() {
+    testSwitchMap();
+
+    return;
+
+    testDebounceTime();
+
+    testEvent();
+
+    testThrottle();
+
+    // test observable
+    testObservableSubscribe();
+
+    // test observer
+    testObservableInterval();
+  }
+
+  function testSwitchMap() {
+    const source$ = Rx.Observable.fromEvent(window, 'resize');
+
+    const switchMap$ = source$.switchMap(val => Rx.Observable.interval(3000));
+
+    const subscribe$ = switchMap$.subscribe(val => console.log(val));
+  }
+
+  function testDebounceTime() {
+    const source$ = Rx.Observable.fromEvent(window, 'resize');
+
+    const debounce$ = source$.debounceTime(1000);
+
+    const subscribe$ = debounce$.subscribe(val => console.log(val));
+  }
+
+  function testEvent() {
+    const source$ = Rx.Observable.fromEvent(window, 'resize');
+
+    const event$ = source$.map(event => event);
+
+    const subscribe$ = event$.subscribe(val => console.log(val));
+  }
+
+  function testThrottle() {
+    const source$ = Rx.Observable.interval(1000);
+
+    const throttle$ = source$.throttle(val => Rx.Observable.interval(2000));
+
+    throttle$.subscribe(val => console.log(val)); // 2, 4, 6, 8, ...
+  }
+
+  function testObservableSubscribe() {
     const simple$ = new Rx.Observable(observer => {
       observer.next('An Item!');
       observer.next('Another Item');
@@ -23,8 +73,9 @@ import Rx from 'rxjs/Rx';
         console.log('complete')
       }
     });
+  }
 
-    // test observer
+  function testObservableInterval() {
     const everySection$ = createInterval$(1000);
     everySection$.subscribe(createSubscriber('one'));
   }

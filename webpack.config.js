@@ -10,7 +10,7 @@ module.exports = {
     colors: true,
     noInfo: true, //  --no-info option
     // host: '',
-    port: 9001,
+    port: 3000,
     hot: true,
     inline: true
   },
