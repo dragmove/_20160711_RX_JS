@@ -6,7 +6,7 @@ import Rx from 'rxjs/Rx';
   $(document).ready(init);
 
   function init() {
-    testSwitchMap();
+    testThrottle();
 
     return;
 
@@ -14,29 +14,21 @@ import Rx from 'rxjs/Rx';
 
     testEvent();
 
-    testThrottle();
-
-    // test observable
     testObservableSubscribe();
 
-    // test observer
     testObservableInterval();
-  }
-
-  function testSwitchMap() {
-    const source$ = Rx.Observable.fromEvent(window, 'resize');
-
-    const switchMap$ = source$.switchMap(val => Rx.Observable.interval(3000));
-
-    const subscribe$ = switchMap$.subscribe(val => console.log(val));
   }
 
   function testDebounceTime() {
     const source$ = Rx.Observable.fromEvent(window, 'resize');
-
     const debounce$ = source$.debounceTime(1000);
-
     const subscribe$ = debounce$.subscribe(val => console.log(val));
+
+    /*
+    const source$ = Rx.Observable.fromEvent(document, 'click');
+    const debounce$ = source$.debounceTime(500);
+    const subscribe$ = debounce$.subscribe(val => console.log(val));
+    */
   }
 
   function testEvent() {
@@ -48,11 +40,20 @@ import Rx from 'rxjs/Rx';
   }
 
   function testThrottle() {
+    /*
     const source$ = Rx.Observable.interval(1000);
-
     const throttle$ = source$.throttle(val => Rx.Observable.interval(2000));
-
     throttle$.subscribe(val => console.log(val)); // 2, 4, 6, 8, ...
+    */
+
+    const source$ = Rx.Observable.fromEvent(window, 'resize');
+
+    const example$ = source$
+      .throttleTime(2000)
+      .debounceTime(2000);
+
+    const subscribe = example$.subscribe(val => console.log('val :', val));
+    // subscribe.unsubscribe(); // unsubscribe
   }
 
   function testObservableSubscribe() {
