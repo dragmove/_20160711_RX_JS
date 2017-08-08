@@ -18,10 +18,11 @@ module.exports = {
   context: __dirname,
 
   entry: {
-    main: [/*'webpack/hot/dev-server',*/ 'babel-polyfill', './app/src/main.js'],
+    "main": [/*'webpack/hot/dev-server',*/ 'babel-polyfill', './app/src/main.js'],
     "drag-and-drop": [/*'webpack/hot/dev-server',*/ 'babel-polyfill', './app/src/drag-and-drop.js'],
     "auto-complete": [/*'webpack/hot/dev-server',*/ 'babel-polyfill', './app/src/auto-complete.js'],
     "observables": [/*'webpack/hot/dev-server',*/ 'babel-polyfill', './app/src/observables.js'],
+    "mix-with-aid": [/*'webpack/hot/dev-server',*/ 'babel-polyfill', './app/src/mix-with-aid.js']
   },
 
   output: {
